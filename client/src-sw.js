@@ -25,20 +25,20 @@ warmStrategyCache({
 });
 
 registerRoute(
-  /\.(css|js|jpg|jpeg|png|gif|svg|ico)$/,
+  /\.(css|js|jpg|jpeg|png|gif|svg|ico)$/, 
   new CacheFirst({
-    cacheName: 'asset-cache',
+    cacheName: 'api-cache',
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxAgeSeconds: 30 * 24 * 60 * 60, 
+        maxAgeSeconds: 7 * 24 * 60 * 60,
       }),
     ],
   })
 );
 
+
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
-registerRoute();
