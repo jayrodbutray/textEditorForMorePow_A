@@ -32,5 +32,5 @@ export const getDb = async () => {
   console.log('All content from the database:', allContent);
   return allContent;
 };
-
+//comments to see if i can push changes finally
 initdb();
