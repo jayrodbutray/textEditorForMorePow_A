@@ -16,50 +16,58 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html',
-        filename: 'index.html',
+        template: '.index.html',
+        title: 'JB APP'
+      }),
+
+      new InjectManifest({
+        swSrc: './src/src-sw.js', 
+        swDest: 'src-sw.js', 
       }),
 
       
       new WebpackPwaManifest({
-        name: 'Your App Name',
-        short_name: 'App',
-        description: 'Description of your app',
+        name: 'jayrodbutray app',
+        short_name: 'JB app',
+        fingerprints: false,
+        inject: true,
+        description: 'Text Editor',
         background_color: '#ffffff',
         theme_color: '#000000',
+        start_url: './',
         icons: [
           {
             src: path.resolve('src/images/icon.png'),
             sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
           },
         ],
       }),
 
-      
-      new InjectManifest({
-        swSrc: path.resolve(__dirname, 'src', 'src-sw.js'), 
-        swDest: 'src-sw.js', 
-      }),
     ],
 
     module: {
       rules: [
         {
-          test: /\.css$/,
+          test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.js$/,
+          test: /\.m?js$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
+              plugins: [
+                '@babel/plugin-proposal-object-rest-spread',
+                '@babel/transform-runtime',
+              ],
             },
           },
         },
       ],
     },
-  };
-};
+  }
+}
 
