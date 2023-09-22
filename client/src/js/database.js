@@ -1,37 +1,54 @@
 import { openDB } from 'idb';
 
-const initdb = async () =>
-  openDB('jate', 1, {
-    upgrade(db) {
-      if (db.objectStoreNames.contains('jate')) {
-        console.log('jate database already exists');
-        return;
-      }
-      db.createObjectStore('jate', { keyPath: 'id', autoIncrement: true });
-      console.log('jate database created');
-    },
-  });
+const initdb = async () => {
+  try {
+    const jateDb = await openDB('jate', 1, {
+      upgrade(db) {
+        if (!db.objectStoreNames.contains('jate')) {
+          const store = db.createObjectStore('jate', { keyPath: 'id', autoIncrement: true });
+          // Add any necessary indexes here
+          console.log('jate database created');
+        }
+      },
+    });
 
-// TODO: Add logic to a method that accepts some content and adds it to the database
+    console.log('jate database opened successfully');
+    return jateDb;
+  } catch (error) {
+    console.error('Error opening database:', error);
+    throw error;
+  }
+};
+
 export const putDb = async (content) => {
-  const jateDb = await openDB('jate_db', 1);
-  const tx = jateDb.transaction('jate', 'readwrite');
-  const store = tx.objectStore('jate');
-  const request = store.put({id: 1, value: content});
-  const result = await request;
-  console.log('Content added to the database:', result);
+  try {
+    const jateDb = await initdb();
+    const tx = jateDb.transaction('jate', 'readwrite');
+    const store = tx.objectStore('jate');
+    const request = store.put({ value: content });
+    const result = await request;
+    console.log('Content added to the database:', result);
+  } catch (error) {
+    console.error('Error adding content to the database:', error);
+    throw error;
+  }
 };
 
-// TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
-  const jateDb = await openDB('jate_db', 1);
-  const tx = jateDb.transaction('jate', 'readonly');
-  const store = tx.objectStore('jate');
-  const request = store.getAll();
-  const result = await request;
-  console.log('result.value', result);
-
-  return result;
+  try {
+    const jateDb = await initdb();
+    const tx = jateDb.transaction('jate', 'readonly');
+    const store = tx.objectStore('jate');
+    const request = store.getAll();
+    const result = await request;
+    console.log('Content retrieved from the database:', result);
+    return result;
+  } catch (error) {
+    console.error('Error retrieving content from the database:', error);
+    throw error;
+  }
 };
-//comments to see if i can push changes finally
+
+// Initialize the database
 initdb();
+
