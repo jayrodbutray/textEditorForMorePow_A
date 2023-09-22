@@ -16,12 +16,12 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: '.index.html',
+        template: './index.html',
         title: 'JB APP'
       }),
 
       new InjectManifest({
-        swSrc: './src/src-sw.js', 
+        swSrc: './src-sw.js', 
         swDest: 'src-sw.js', 
       }),
 
