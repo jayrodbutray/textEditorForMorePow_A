@@ -25,15 +25,15 @@ export const putDb = async (content) => {
     const jateDb = await initdb();
     const tx = jateDb.transaction('jate', 'readwrite');
     const store = tx.objectStore('jate');
-    const request = store.put({ value: content });
+    const request = store.put({ id: null, value: content });
     const result = await request;
+    
     console.log('Content added to the database:', result);
   } catch (error) {
     console.error('Error adding content to the database:', error);
     throw error;
   }
 };
-
 export const getDb = async () => {
   try {
     const jateDb = await initdb();
