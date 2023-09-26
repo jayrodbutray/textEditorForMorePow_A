@@ -25,7 +25,7 @@ export const putDb = async (content) => {
     const jateDb = await initdb();
     const tx = jateDb.transaction('jate', 'readwrite');
     const store = tx.objectStore('jate');
-    const request = store.put({ id: null, value: content });
+    const request = store.put({ id: 1, value: content });
       return new Promise((resolve, reject) => {
         request.onsuccess = (event) => {
           const addedId = event.target.result;
