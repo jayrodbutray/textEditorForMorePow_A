@@ -26,9 +26,18 @@ export const putDb = async (content) => {
     const tx = jateDb.transaction('jate', 'readwrite');
     const store = tx.objectStore('jate');
     const request = store.put({ id: null, value: content });
-    const result = await request;
+      return new Promise((resolve, reject) => {
+        request.onsuccess = (event) => {
+          const addedId = event.target.result;
+          console.log('Content added to the database with ID:', addedId);
+            resolve(addedId.toString());
+        };
+        request.onerror = (event) => {
+          console.error('Error adding content to the database:', event.target.error);
+          reject(event.target.error);
+        };
+      });
     
-    console.log('Content added to the database:', result);
   } catch (error) {
     console.error('Error adding content to the database:', error);
     throw error;
