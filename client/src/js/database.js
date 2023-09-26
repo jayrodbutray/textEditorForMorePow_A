@@ -26,32 +26,25 @@ export const putDb = async (content) => {
     const tx = jateDb.transaction('jate', 'readwrite');
     const store = tx.objectStore('jate');
     const request = store.put({ id: 1, value: content });
-      return new Promise((resolve, reject) => {
-        request.onsuccess = (event) => {
-          const addedId = event.target.result;
-          console.log('Content added to the database with ID:', addedId);
-            resolve(addedId.toString());
-        };
-        request.onerror = (event) => {
-          console.error('Error adding content to the database:', event.target.error);
-          reject(event.target.error);
-        };
-      });
+    return await request;
     
   } catch (error) {
     console.error('Error adding content to the database:', error);
     throw error;
   }
 };
+
 export const getDb = async () => {
   try {
     const jateDb = await initdb();
     const tx = jateDb.transaction('jate', 'readonly');
     const store = tx.objectStore('jate');
-    const request = store.get();
+    const request = store.get(1);
     const result = await request;
     console.log('Content retrieved from the database:', result);
-    return result;
+    if (!result) return ""
+    return result.value;
+
   } catch (error) {
     console.error('Error retrieving content from the database:', error);
     throw error;
